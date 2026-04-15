@@ -3,641 +3,489 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>競廠遊戲週報 2026-04-15</title>
+<title>競廠遊戲資料庫</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: #0f0f11;
-    color: #e8e8f0;
-    font-family: 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-    font-size: 13px;
-    line-height: 1.6;
-  }
-
-  /* ── Header ── */
-  .header {
-    background: linear-gradient(135deg, #17171b 0%, #1c1a2e 100%);
-    border-bottom: 1px solid #2a2a34;
-    padding: 32px 40px 28px;
-  }
-  .header-top { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-  .header-label { font-size: 11px; color: #55556a; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
-  .header-title { font-size: 22px; font-weight: 600; color: #e8e8f0; }
-  .header-period { font-size: 13px; color: #8888a0; margin-top: 4px; }
-  .header-meta { text-align: right; }
-  .header-date { font-size: 28px; font-weight: 300; color: #7c6aff; font-variant-numeric: tabular-nums; }
-  .header-sub { font-size: 11px; color: #55556a; margin-top: 2px; }
-
-  /* ── Summary cards ── */
-  .summary {
-    display: flex; flex-wrap: wrap; gap: 12px;
-    padding: 20px 40px;
-    border-bottom: 1px solid #1e1e26;
-    background: #13131a;
-  }
-  .card {
-    background: #17171b;
-    border: 1px solid #2a2a34;
-    border-radius: 8px;
-    padding: 12px 20px;
-    min-width: 120px;
-    flex: 1;
-  }
-  .card-num { font-size: 26px; font-weight: 500; color: #3ecf8e; font-variant-numeric: tabular-nums; }
-  .card-label { font-size: 11px; color: #55556a; margin-top: 2px; }
-
-  /* ── Vendor section ── */
-  .section { padding: 24px 40px 0; }
-  .section:last-of-type { padding-bottom: 40px; }
-
-  .vendor-header {
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 12px;
-  }
-  .vendor-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .vendor-name { font-size: 13px; font-weight: 600; color: #c8c8e0; letter-spacing: 0.03em; }
-  .vendor-count { font-size: 11px; color: #55556a; }
-
-  /* Vendor colours */
-  .v-pp   .vendor-dot { background: #7c6aff; }
-  .v-pg   .vendor-dot { background: #3ecf8e; }
-  .v-jili .vendor-dot { background: #f59e0b; }
-  .v-tada .vendor-dot { background: #38bdf8; }
-  .v-fc   .vendor-dot { background: #f472b6; }
-  .v-jdb  .vendor-dot { background: #a78bfa; }
-
-  .v-pp   table thead th { border-top-color: #7c6aff44; }
-  .v-pg   table thead th { border-top-color: #3ecf8e44; }
-  .v-tada table thead th { border-top-color: #38bdf844; }
-  .v-fc   table thead th { border-top-color: #f472b644; }
-
-  /* ── Table ── */
-  .table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid #2a2a34; margin-bottom: 8px; }
-  table { width: 100%; border-collapse: collapse; }
-  thead th {
-    background: #17171b;
-    color: #55556a;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 9px 12px;
-    text-align: left;
-    border-bottom: 1px solid #2a2a34;
-    white-space: nowrap;
-  }
-  tbody tr { border-bottom: 1px solid #1e1e26; transition: background 0.1s; }
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: #17171b; }
-  tbody td {
-    padding: 10px 12px;
-    color: #c8c8e0;
-    vertical-align: top;
-  }
-
-  .col-name { min-width: 160px; max-width: 220px; }
-  .col-date { white-space: nowrap; color: #8888a0; }
-  .col-grid { white-space: nowrap; font-family: monospace; font-size: 12px; color: #8888a0; }
-  .col-theme { min-width: 100px; color: #a0a0b8; }
-  .col-feature { min-width: 180px; color: #8888a0; font-size: 12px; }
-  .col-num { white-space: nowrap; font-family: monospace; font-size: 12px; }
-  .col-badge { white-space: nowrap; }
-
-  a.game-link {
-    color: #e8e8f0;
-    text-decoration: none;
-    border-bottom: 1px dashed #3d3d55;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  a.game-link:hover { color: #7c6aff; border-color: #7c6aff; }
-
-  .vol-tag {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 1px 6px;
-    border-radius: 4px;
-    letter-spacing: 0.04em;
-  }
-  .vol-극 { background: #3b0f0f; color: #f87171; }
-  .vol-고 { background: #2b1e08; color: #f0a040; }
-  .vol-중 { background: #0d2b1f; color: #3ecf8e; }
-  .vol-저 { background: #0f1e2b; color: #38bdf8; }
-
-  .badge {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 20px; height: 20px;
-    border-radius: 4px;
-    font-size: 10px; font-weight: 700;
-    margin-right: 3px;
-  }
-  .badge-y { background: #0d2b1f; color: #3ecf8e; }
-  .badge-n { background: #1a1a22; color: #44445a; }
-  .badge-empty { background: transparent; color: #33334a; }
-
-  .rtp-val { color: #7c6aff; }
-  .maxwin-val { color: #f0a040; }
-
-  .note-cell { font-size: 11px; color: #44445a; max-width: 180px; }
-
-  /* ── Errors ── */
-  .errors-section {
-    margin: 0 40px 32px;
-    background: #1a1015;
-    border: 1px solid #3a2030;
-    border-radius: 8px;
-    padding: 16px 20px;
-  }
-  .errors-title { font-size: 11px; font-weight: 600; color: #7a3050; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
-  .errors-list { list-style: none; }
-  .errors-list li { font-size: 11px; color: #6a3040; padding: 3px 0; line-height: 1.5; }
-  .errors-list li::before { content: "⚠ "; color: #7a3050; }
-
-  /* ── Footer ── */
-  .footer {
-    border-top: 1px solid #1e1e26;
-    padding: 16px 40px;
-    font-size: 11px;
-    color: #33334a;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  @media print {
-    body { background: #fff; color: #111; }
-    .header { background: #f5f5f8; border-bottom: 2px solid #ddd; }
-    .header-title { color: #111; }
-    .header-period, .header-sub { color: #666; }
-    .header-date { color: #5a4fd8; }
-    .summary { background: #f9f9fc; }
-    .card { background: #fff; border-color: #ddd; }
-    .card-num { color: #2a9d6e; }
-    .card-label { color: #888; }
-    .vendor-name { color: #222; }
-    .vendor-count { color: #888; }
-    .table-wrap { border-color: #ddd; }
-    thead th { background: #f5f5f8; color: #888; border-bottom-color: #ddd; }
-    tbody tr { border-bottom-color: #eee; }
-    tbody td { color: #333; }
-    .col-date, .col-grid, .col-feature { color: #555; }
-    .col-theme { color: #444; }
-    a.game-link { color: #222; border-color: #bbb; }
-    .rtp-val { color: #5a4fd8; }
-    .maxwin-val { color: #c07000; }
-    .badge-n { background: #eee; color: #aaa; }
-    .badge-y { background: #d4f5e9; color: #1a7a50; }
-    .vol-고 { background: #fef3e2; color: #c07000; }
-    .vol-중 { background: #e6faf3; color: #1a7a50; }
-    .vol-저 { background: #e6f4fc; color: #1a70a0; }
-    .errors-section { background: #fff5f7; border-color: #fcc; }
-    .errors-title { color: #c04060; }
-    .errors-list li { color: #a03050; }
-    .footer { color: #aaa; border-top-color: #eee; }
-    .note-cell { color: #888; }
-    .section { page-break-inside: avoid; }
-  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0f0f11;color:#e8e8f0;font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',sans-serif;font-size:13px;line-height:1.6}
+  .header{background:linear-gradient(135deg,#17171b,#1c1a2e);border-bottom:1px solid #2a2a34;padding:28px 40px 22px}
+  .header-row{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .header-label{font-size:11px;color:#55556a;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+  .header-title{font-size:22px;font-weight:600;color:#e8e8f0}
+  .header-date{font-size:12px;color:#55556a;margin-top:3px}
+  .header-count{font-size:32px;font-weight:300;color:#7c6aff;font-variant-numeric:tabular-nums;text-align:right}
+  .header-count-label{font-size:11px;color:#55556a;text-align:right}
+  .toolbar{display:flex;align-items:center;gap:10px;padding:14px 40px;background:#13131a;border-bottom:1px solid #1e1e26;flex-wrap:wrap}
+  .search-wrap{position:relative;flex:1;min-width:180px;max-width:280px}
+  .search-wrap input{width:100%;background:#17171b;border:1px solid #2a2a34;border-radius:6px;padding:7px 10px 7px 32px;color:#e8e8f0;font-size:12px;outline:none}
+  .search-wrap input:focus{border-color:#7c6aff}
+  .search-wrap::before{content:"⌕";position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#55556a;font-size:14px;pointer-events:none}
+  .filter-btns{display:flex;gap:6px;flex-wrap:wrap}
+  .filter-btn{background:#17171b;border:1px solid #2a2a34;border-radius:6px;color:#8888a0;padding:5px 12px;font-size:11px;cursor:pointer;transition:all .15s;white-space:nowrap}
+  .filter-btn:hover{border-color:#7c6aff;color:#c8c8e0}
+  .filter-btn.active{background:#1a1730;border-color:#7c6aff;color:#7c6aff}
+  .f-count{font-variant-numeric:tabular-nums}
+  .result-count{font-size:11px;color:#55556a;margin-left:auto;white-space:nowrap}
+  .table-wrap{overflow-x:auto;padding:0 40px 40px}
+  table{width:100%;border-collapse:collapse;margin-top:16px}
+  thead th{background:#17171b;color:#55556a;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:9px 12px;text-align:left;border-bottom:1px solid #2a2a34;white-space:nowrap;position:sticky;top:0;z-index:1}
+  tbody tr{border-bottom:1px solid #1e1e26;transition:background .1s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:#17171b}
+  tbody tr.hidden{display:none}
+  tbody td{padding:10px 12px;color:#c8c8e0;vertical-align:top}
+  .col-name{min-width:160px;max-width:220px}
+  .col-vendor{white-space:nowrap;font-size:11px;color:#7c6aff}
+  .col-date{white-space:nowrap;color:#8888a0;font-size:12px}
+  .col-grid{white-space:nowrap;font-family:monospace;font-size:12px;color:#8888a0}
+  .col-theme{min-width:90px;color:#a0a0b8}
+  .col-feature{min-width:180px;color:#8888a0;font-size:12px}
+  .col-num{white-space:nowrap;font-family:monospace;font-size:12px}
+  .col-badge{white-space:nowrap}
+  .note-cell{font-size:11px;color:#44445a;max-width:160px}
+  a.game-link{color:#e8e8f0;text-decoration:none;border-bottom:1px dashed #3d3d55;transition:color .15s,border-color .15s}
+  a.game-link:hover{color:#7c6aff;border-color:#7c6aff}
+  .no-link{color:#55556a}
+  .vol-tag{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;letter-spacing:.04em}
+  .vol-극{background:#3b0f0f;color:#f87171}
+  .vol-고{background:#2b1e08;color:#f0a040}
+  .vol-중{background:#0d2b1f;color:#3ecf8e}
+  .vol-저{background:#0f1e2b;color:#38bdf8}
+  .vol-empty{background:#1a1a22;color:#55556a}
+  .badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:4px;font-size:10px;font-weight:700;margin-right:2px}
+  .badge-y{background:#0d2b1f;color:#3ecf8e}
+  .badge-n{background:#1a1a22;color:#44445a}
+  .badge-empty{background:transparent;color:#33334a}
+  .rtp-val{color:#7c6aff}
+  .maxwin-val{color:#f0a040}
+  .new-tag{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:#1a1730;color:#7c6aff;border:1px solid #3d3480;margin-left:5px;vertical-align:middle;letter-spacing:.04em}
+  .empty-msg{display:none;text-align:center;padding:60px 20px;color:#44445a;font-size:13px}
+  .footer{border-top:1px solid #1e1e26;padding:14px 40px;font-size:11px;color:#33334a;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  @media(max-width:700px){.header,.toolbar,.table-wrap{padding-left:16px;padding-right:16px}}
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <div class="header">
-  <div class="header-top">
+  <div class="header-row">
     <div>
       <div class="header-label">競廠遊戲追蹤</div>
-      <div class="header-title">競廠新遊戲週報</div>
-      <div class="header-period">資料期間：2026-04-01 ～ 2026-04-15</div>
+      <div class="header-title">競廠遊戲資料庫</div>
+      <div class="header-date">最後更新：2026-04-15</div>
     </div>
-    <div class="header-meta">
-      <div class="header-date">2026-04-15</div>
-      <div class="header-sub">產出日期</div>
+    <div>
+      <div class="header-count">22</div>
+      <div class="header-count-label">款遊戲</div>
     </div>
   </div>
 </div>
 
-<!-- Summary -->
-<div class="summary">
-  <div class="card">
-    <div class="card-num">22</div>
-    <div class="card-label">本期遊戲總數</div>
+<div class="toolbar">
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="搜尋遊戲名稱、主題、機制…">
   </div>
-  <div class="card">
-    <div class="card-num">9</div>
-    <div class="card-label">Pragmatic Play</div>
+  <div class="filter-btns" id="filter-btns">
+    <button class="filter-btn active" data-v="all">全部 <span class="f-count">22</span></button>
+<button class="filter-btn" data-v="Pragmatic Play">Pragmatic Play <span class="f-count">9</span></button>
+<button class="filter-btn" data-v="PG Soft">PG Soft <span class="f-count">1</span></button>
+<button class="filter-btn" data-v="Tada Gaming">Tada <span class="f-count">5</span></button>
+<button class="filter-btn" data-v="Fa Chai Gaming">Fa Chai <span class="f-count">7</span></button>
+
   </div>
-  <div class="card">
-    <div class="card-num">1</div>
-    <div class="card-label">PG Soft</div>
-  </div>
-  <div class="card">
-    <div class="card-num">5</div>
-    <div class="card-label">Tada Gaming</div>
-  </div>
-  <div class="card">
-    <div class="card-num">7</div>
-    <div class="card-label">Fa Chai Gaming</div>
-  </div>
-  <div class="card">
-    <div class="card-num">0</div>
-    <div class="card-label">JILI / JDB</div>
-  </div>
+  <div class="result-count" id="result-count">22 筆</div>
 </div>
 
-<!-- Pragmatic Play -->
-<div class="section v-pp">
-  <div class="vendor-header">
-    <span class="vendor-dot"></span>
-    <span class="vendor-name">Pragmatic Play</span>
-    <span class="vendor-count">9 款</span>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>遊戲名稱</th>
-          <th>上架日</th>
-          <th>盤面</th>
-          <th>主題</th>
-          <th>機制</th>
-          <th>波動</th>
-          <th>RTP</th>
-          <th>最大倍數</th>
-          <th>EB</th>
-          <th>BF</th>
-          <th>備註</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/big-bass-trophy-catch" target="_blank" rel="noopener">Big Bass Trophy Catch</a></td>
-          <td class="col-date">2026-04-16</td>
-          <td class="col-grid">5x3</td>
-          <td class="col-theme">釣魚、漁夫</td>
-          <td class="col-feature">Free Spins, Wild Collection, Multiplier, Bonus Buy, Ante Bet</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">5000x</td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell">Reel Kingdom 出品；upcoming</td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/great-ghosts" target="_blank" rel="noopener">Great Ghosts!</a></td>
-          <td class="col-date">2026-04-23</td>
-          <td class="col-grid">5x4</td>
-          <td class="col-theme">鬼魂、幽靈、恐怖</td>
-          <td class="col-feature">Pot Collection, Respin, Scatter, Bonus Buy, Ante Bet</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">40000x</td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell">upcoming；Max Win 極高</td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/inca-queen" target="_blank" rel="noopener">Inca Queen</a></td>
-          <td class="col-date">2026-03-29</td>
-          <td class="col-grid">5x3</td>
-          <td class="col-theme">印加、古文明、中南美</td>
-          <td class="col-feature">Hold & Win, Coin Respin, Frame Respin, Multiplier, Bonus Buy, Ante Bet</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.55%</td>
-          <td class="col-num maxwin-val">5000x</td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/idol-pop-fever" target="_blank" rel="noopener">Idol Pop Fever</a></td>
-          <td class="col-date">2026-04-06</td>
-          <td class="col-grid">5x5</td>
-          <td class="col-theme">K-Pop、音樂、偶像</td>
-          <td class="col-feature">Random Wild, Wild Multipliers, Free Spins, Scatter, Bonus Buy, Ante Bet</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">5000x</td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/snow-party" target="_blank" rel="noopener">Snow Party</a></td>
-          <td class="col-date">2026-03-30</td>
-          <td class="col-grid">7x7 Cluster</td>
-          <td class="col-theme">冬季、企鵝、雪</td>
-          <td class="col-feature">Cluster Pays, Sticky Wilds, Wild Respins, Multiplier Wilds, Free Spins, Bonus Buy</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">5000x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/jelly-express" target="_blank" rel="noopener">Jelly Express</a></td>
-          <td class="col-date">2026-03-30</td>
-          <td class="col-grid">6x5</td>
-          <td class="col-theme">糖果、果凍、甜食</td>
-          <td class="col-feature">Pay Anywhere, Wild Multipliers, Free Spins Selection, Cascading, Bonus Buy, Ante Bet</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">5000x</td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/triple-pot-diamond" target="_blank" rel="noopener">Triple Pot Diamond</a></td>
-          <td class="col-date">2026-03-26</td>
-          <td class="col-grid">5x3</td>
-          <td class="col-theme">鑽石、水果、三連彩</td>
-          <td class="col-feature">Cash Collect, Pot Collection, Free Spins, Multiplier, Bonus Buy</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.57%</td>
-          <td class="col-num maxwin-val">10000x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/happy-dragon" target="_blank" rel="noopener">Happy Dragon</a></td>
-          <td class="col-date">2026-03-13</td>
-          <td class="col-grid">3-4-3</td>
-          <td class="col-theme">龍、中國、亞洲</td>
-          <td class="col-feature">Expanding Wild, Multiplier Spots, Free Spins</td>
-          <td><span class="vol-tag vol-중">中</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">5000x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="note-cell">不規則盤面（3-4-3）</td>
-        </tr>
-        <tr>
-          <td class="col-name" style="color:#55556a">Steamin' Reels</td>
-          <td class="col-date" style="color:#33334a">—</td>
-          <td class="col-grid">5x4</td>
-          <td class="col-theme">蒸汽龐克、機械</td>
-          <td class="col-feature">Tumble, Free Spins, Cascading</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num" style="color:#33334a">—</td>
-          <td class="col-num" style="color:#33334a">—</td>
-          <td class="col-badge"><span class="badge badge-empty">—</span></td>
-          <td class="col-badge"><span class="badge badge-empty">—</span></td>
-          <td class="note-cell">slotcatalog 查無，資料待補</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<div class="table-wrap">
+  <table id="main-table">
+    <thead>
+      <tr>
+        <th>遊戲名稱</th>
+        <th>廠商</th>
+        <th>上架日</th>
+        <th>盤面</th>
+        <th>主題</th>
+        <th>機制</th>
+        <th>波動</th>
+        <th>RTP</th>
+        <th>最大倍數</th>
+        <th>EB</th>
+        <th>BF</th>
+        <th>備註</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+
+      <tr data-vendor="Pragmatic Play">
+        <td class="col-name"><span class="no-link">Steamin' Reels</span></td>
+        <td class="col-vendor">Pragmatic Play</td>
+        <td class="col-date">—</td>
+        <td class="col-grid">5x4</td>
+        <td class="col-theme">蒸汽龐克、機械</td>
+        <td class="col-feature">Tumble, Free Spins, Cascading</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">—</td>
+        <td class="col-num maxwin-val">—</td>
+        <td class="col-badge"><span class="badge badge-empty">—</span></td>
+        <td class="col-badge"><span class="badge badge-empty">—</span></td>
+        <td class="note-cell">PP 官網新遊戲區上架；slotcatalog 查無，RTP/MaxWin 待補</td>
+      </tr>
+
+      <tr data-vendor="Pragmatic Play">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/happy-dragon" target="_blank" rel="noopener">Happy Dragon</a></td>
+        <td class="col-vendor">Pragmatic Play</td>
+        <td class="col-date">2026-03-13</td>
+        <td class="col-grid">3-4-3</td>
+        <td class="col-theme">龍、中國、亞洲</td>
+        <td class="col-feature">Expanding Wild, Multiplier Spots, Free Spins</td>
+        <td><span class="vol-tag vol-중">中</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">5000x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="note-cell">不規則盤面（3-4-3）</td>
+      </tr>
+
+      <tr data-vendor="Pragmatic Play">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/triple-pot-diamond" target="_blank" rel="noopener">Triple Pot Diamond</a></td>
+        <td class="col-vendor">Pragmatic Play</td>
+        <td class="col-date">2026-03-26</td>
+        <td class="col-grid">5x3</td>
+        <td class="col-theme">鑽石、水果、三連彩</td>
+        <td class="col-feature">Cash Collect, Pot Collection, Free Spins, Multiplier, Bonus Buy</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.57%</td>
+        <td class="col-num maxwin-val">10000x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Pragmatic Play">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/inca-queen" target="_blank" rel="noopener">Inca Queen</a></td>
+        <td class="col-vendor">Pragmatic Play</td>
+        <td class="col-date">2026-03-29</td>
+        <td class="col-grid">5x3</td>
+        <td class="col-theme">印加、古文明、中南美</td>
+        <td class="col-feature">Hold &amp; Win, Coin Respin, Frame Respin, Multiplier, Bonus Buy, Ante Bet</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.55%</td>
+        <td class="col-num maxwin-val">5000x</td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Pragmatic Play">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/snow-party" target="_blank" rel="noopener">Snow Party</a></td>
+        <td class="col-vendor">Pragmatic Play</td>
+        <td class="col-date">2026-03-30</td>
+        <td class="col-grid">7x7 Cluster</td>
+        <td class="col-theme">冬季、企鵝、雪</td>
+        <td class="col-feature">Cluster Pays, Sticky Wilds, Wild Respins, Multiplier Wilds, Free Spins, Bonus Buy</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">5000x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Pragmatic Play">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/jelly-express" target="_blank" rel="noopener">Jelly Express</a></td>
+        <td class="col-vendor">Pragmatic Play</td>
+        <td class="col-date">2026-03-30</td>
+        <td class="col-grid">6x5</td>
+        <td class="col-theme">糖果、果凍、甜食</td>
+        <td class="col-feature">Pay Anywhere, Wild Multipliers, Free Spins Selection, Cascading, Bonus Buy, Ante Bet</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">5000x</td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Pragmatic Play">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/idol-pop-fever" target="_blank" rel="noopener">Idol Pop Fever</a> <span class="new-tag">NEW</span></td>
+        <td class="col-vendor">Pragmatic Play</td>
+        <td class="col-date">2026-04-06</td>
+        <td class="col-grid">5x5</td>
+        <td class="col-theme">K-Pop、音樂、偶像</td>
+        <td class="col-feature">Random Wild, Wild Multipliers, Free Spins, Scatter, Bonus Buy, Ante Bet</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">5000x</td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Pragmatic Play">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/big-bass-trophy-catch" target="_blank" rel="noopener">Big Bass Trophy Catch</a> <span class="new-tag">NEW</span></td>
+        <td class="col-vendor">Pragmatic Play</td>
+        <td class="col-date">2026-04-16</td>
+        <td class="col-grid">5x3</td>
+        <td class="col-theme">釣魚、漁夫</td>
+        <td class="col-feature">Free Spins, Wild Collection, Multiplier, Bonus Buy, Ante Bet</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">5000x</td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell">Reel Kingdom（PP 子廠牌）；upcoming 上架日 2026-04-16</td>
+      </tr>
+
+      <tr data-vendor="Pragmatic Play">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/great-ghosts" target="_blank" rel="noopener">Great Ghosts!</a> <span class="new-tag">NEW</span></td>
+        <td class="col-vendor">Pragmatic Play</td>
+        <td class="col-date">2026-04-23</td>
+        <td class="col-grid">5x4</td>
+        <td class="col-theme">鬼魂、幽靈、恐怖</td>
+        <td class="col-feature">Pot Collection, Respin, Scatter, Bonus Buy, Ante Bet</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">40000x</td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell">upcoming 上架日 2026-04-23；Max Win 極高</td>
+      </tr>
+
+      <tr data-vendor="PG Soft">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/perfect-strike" target="_blank" rel="noopener">Perfect Strike</a> <span class="new-tag">NEW</span></td>
+        <td class="col-vendor">PG Soft</td>
+        <td class="col-date">2026-04-03</td>
+        <td class="col-grid">3x3</td>
+        <td class="col-theme">足球、運動、獎盃</td>
+        <td class="col-feature">Trophy Respin, Free Spins, Win Multiplier</td>
+        <td><span class="vol-tag vol-중">中</span></td>
+        <td class="col-num rtp-val">96.78%</td>
+        <td class="col-num maxwin-val">4000x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="note-cell">PG Soft 官網新聞 2026-04-06 公告</td>
+      </tr>
+
+      <tr data-vendor="Tada Gaming">
+        <td class="col-name"><span class="no-link">Mines football</span></td>
+        <td class="col-vendor">Tada Gaming</td>
+        <td class="col-date">—</td>
+        <td class="col-grid">—</td>
+        <td class="col-theme">足球、Mines 踩地雷</td>
+        <td class="col-feature">Mines</td>
+        <td><span class="vol-tag vol-empty">—</span></td>
+        <td class="col-num rtp-val">—</td>
+        <td class="col-num maxwin-val">—</td>
+        <td class="col-badge"><span class="badge badge-empty">—</span></td>
+        <td class="col-badge"><span class="badge badge-empty">—</span></td>
+        <td class="note-cell">slotcatalog 查無此遊戲，資料待補</td>
+      </tr>
+
+      <tr data-vendor="Tada Gaming">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/fortune-garuda-500" target="_blank" rel="noopener">Fortune Garuda 500</a></td>
+        <td class="col-vendor">Tada Gaming</td>
+        <td class="col-date">2026-02-18</td>
+        <td class="col-grid">3x3</td>
+        <td class="col-theme">迦樓羅、古印度、神獸</td>
+        <td class="col-feature">Extra Bet, Nudge, Multiplier, Special Reel</td>
+        <td><span class="vol-tag vol-저">低</span></td>
+        <td class="col-num rtp-val">97.10%</td>
+        <td class="col-num maxwin-val">25000x</td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Tada Gaming">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/3-coin-golden-peacock" target="_blank" rel="noopener">3 Coin Golden Peacock</a></td>
+        <td class="col-vendor">Tada Gaming</td>
+        <td class="col-date">2026-03-17</td>
+        <td class="col-grid">5x4</td>
+        <td class="col-theme">孔雀、中國、金色、亞洲</td>
+        <td class="col-feature">Cash Collect, Pot Collection, Free Spins, Nudge, Multiplier</td>
+        <td><span class="vol-tag vol-중">中</span></td>
+        <td class="col-num rtp-val">97.05%</td>
+        <td class="col-num maxwin-val">5000x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Tada Gaming">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/roulette-multiplier-spin" target="_blank" rel="noopener">Roulette Multiplier Spin</a></td>
+        <td class="col-vendor">Tada Gaming</td>
+        <td class="col-date">2026-03-24</td>
+        <td class="col-grid">—</td>
+        <td class="col-theme">輪盤、賭場、經典</td>
+        <td class="col-feature">Multiplier, Bonus Wheel, Coin Features, Fixed Jackpots</td>
+        <td><span class="vol-tag vol-empty">—</span></td>
+        <td class="col-num rtp-val">97.30%</td>
+        <td class="col-num maxwin-val">2000x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Tada Gaming">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/grand-golden-treasure" target="_blank" rel="noopener">Grand Golden Treasure</a></td>
+        <td class="col-vendor">Tada Gaming</td>
+        <td class="col-date">2026-03-26</td>
+        <td class="col-grid">—</td>
+        <td class="col-theme">黃金、寶藏、冒險</td>
+        <td class="col-feature">Bonus Wheel, Multiplier, Random Multiplier, Fixed Jackpots</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">97.00%</td>
+        <td class="col-num maxwin-val">500x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Fa Chai Gaming">
+        <td class="col-name"><span class="no-link">CATLA'S MONEY MACHINE</span></td>
+        <td class="col-vendor">Fa Chai Gaming</td>
+        <td class="col-date">—</td>
+        <td class="col-grid">3x1</td>
+        <td class="col-theme">機器、財富</td>
+        <td class="col-feature">Money Machine, Scatter</td>
+        <td><span class="vol-tag vol-중">中</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">20000x</td>
+        <td class="col-badge"><span class="badge badge-empty">—</span></td>
+        <td class="col-badge"><span class="badge badge-empty">—</span></td>
+        <td class="note-cell">slotcatalog 查無，資料來源為 fachaigaming.com 官網</td>
+      </tr>
+
+      <tr data-vendor="Fa Chai Gaming">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/sugar-bang-bang-plus" target="_blank" rel="noopener">SUGAR BANG BANG PLUS</a></td>
+        <td class="col-vendor">Fa Chai Gaming</td>
+        <td class="col-date">2025-11-20</td>
+        <td class="col-grid">5x4</td>
+        <td class="col-theme">糖果、甜食、派對</td>
+        <td class="col-feature">1024 Ways, Free Spins, Multiplier, Buy Feature, Ante Bet</td>
+        <td><span class="vol-tag vol-중">中</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">5000x</td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Fa Chai Gaming">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/poker-win-2" target="_blank" rel="noopener">POKER WIN 2</a></td>
+        <td class="col-vendor">Fa Chai Gaming</td>
+        <td class="col-date">2025-12-02</td>
+        <td class="col-grid">6x4</td>
+        <td class="col-theme">撲克牌、牌局</td>
+        <td class="col-feature">4096 Ways, Free Spins, Multiplier, Buy Feature</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">15000x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Fa Chai Gaming">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/bad-rich-wolf" target="_blank" rel="noopener">BAD RICH WOLF</a></td>
+        <td class="col-vendor">Fa Chai Gaming</td>
+        <td class="col-date">2025-12-19</td>
+        <td class="col-grid">3x3</td>
+        <td class="col-theme">惡狼、童話、富豪</td>
+        <td class="col-feature">Wild, Stacked Symbols, Progressive Jackpot, Multiplier, Free Spins, Buy Feature</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">22500x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Fa Chai Gaming">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/dj-boom-boom" target="_blank" rel="noopener">DJ BOOM BOOM</a></td>
+        <td class="col-vendor">Fa Chai Gaming</td>
+        <td class="col-date">2026-01-02</td>
+        <td class="col-grid">6 Reels (3-4-5-5-4-3) 3600 Ways</td>
+        <td class="col-theme">DJ、音樂、派對</td>
+        <td class="col-feature">Ways, Free Spins, Multiplier, Scatter, Buy Feature</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">5000x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell">不規則盤面 3-4-5-5-4-3</td>
+      </tr>
+
+      <tr data-vendor="Fa Chai Gaming">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/muscle-fortune-cat" target="_blank" rel="noopener">MUSCLE FORTUNE CAT</a></td>
+        <td class="col-vendor">Fa Chai Gaming</td>
+        <td class="col-date">2026-01-06</td>
+        <td class="col-grid">6x4</td>
+        <td class="col-theme">招財貓、肌肉、亞洲</td>
+        <td class="col-feature">Free Spins, Lucky Pouch, Multiplier, Scatter, 4096 Ways</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">10000x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="note-cell"></td>
+      </tr>
+
+      <tr data-vendor="Fa Chai Gaming">
+        <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/open-vault" target="_blank" rel="noopener">OPEN VAULT</a></td>
+        <td class="col-vendor">Fa Chai Gaming</td>
+        <td class="col-date">2026-01-14</td>
+        <td class="col-grid">6xMegaways (4-5-5-5-4)</td>
+        <td class="col-theme">保險箱、財富、冒險</td>
+        <td class="col-feature">Megaways, Cascading, Multiplier, Free Spins, Bonus Buy</td>
+        <td><span class="vol-tag vol-고">高</span></td>
+        <td class="col-num rtp-val">96.50%</td>
+        <td class="col-num maxwin-val">10000x</td>
+        <td class="col-badge"><span class="badge badge-n">N</span></td>
+        <td class="col-badge"><span class="badge badge-y">Y</span></td>
+        <td class="note-cell"></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="empty-msg" id="empty-msg">找不到符合條件的遊戲</div>
 </div>
 
-<!-- PG Soft -->
-<div class="section v-pg">
-  <div class="vendor-header">
-    <span class="vendor-dot"></span>
-    <span class="vendor-name">PG Soft</span>
-    <span class="vendor-count">1 款</span>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>遊戲名稱</th><th>上架日</th><th>盤面</th><th>主題</th><th>機制</th><th>波動</th><th>RTP</th><th>最大倍數</th><th>EB</th><th>BF</th><th>備註</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/perfect-strike" target="_blank" rel="noopener">Perfect Strike</a></td>
-          <td class="col-date">2026-04-03</td>
-          <td class="col-grid">3x3</td>
-          <td class="col-theme">足球、運動、獎盃</td>
-          <td class="col-feature">Trophy Respin, Free Spins, Win Multiplier</td>
-          <td><span class="vol-tag vol-중">中</span></td>
-          <td class="col-num rtp-val">96.78%</td>
-          <td class="col-num maxwin-val">4000x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="note-cell">PG Soft 官網新聞 2026-04-06 公告</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Tada Gaming -->
-<div class="section v-tada">
-  <div class="vendor-header">
-    <span class="vendor-dot"></span>
-    <span class="vendor-name">Tada Gaming</span>
-    <span class="vendor-count">5 款</span>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>遊戲名稱</th><th>上架日</th><th>盤面</th><th>主題</th><th>機制</th><th>波動</th><th>RTP</th><th>最大倍數</th><th>EB</th><th>BF</th><th>備註</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/roulette-multiplier-spin" target="_blank" rel="noopener">Roulette Multiplier Spin</a></td>
-          <td class="col-date">2026-03-24</td>
-          <td class="col-grid">—</td>
-          <td class="col-theme">輪盤、賭場、經典</td>
-          <td class="col-feature">Multiplier, Bonus Wheel, Coin Features, Fixed Jackpots</td>
-          <td><span class="vol-tag vol-중" style="background:#1a1a22;color:#55556a">—</span></td>
-          <td class="col-num rtp-val">97.30%</td>
-          <td class="col-num maxwin-val">2000x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/fortune-garuda-500" target="_blank" rel="noopener">Fortune Garuda 500</a></td>
-          <td class="col-date">2026-02-18</td>
-          <td class="col-grid">3x3</td>
-          <td class="col-theme">迦樓羅、古印度、神獸</td>
-          <td class="col-feature">Extra Bet, Nudge, Multiplier, Special Reel</td>
-          <td><span class="vol-tag vol-저">低</span></td>
-          <td class="col-num rtp-val">97.10%</td>
-          <td class="col-num maxwin-val">25000x</td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/grand-golden-treasure" target="_blank" rel="noopener">Grand Golden Treasure</a></td>
-          <td class="col-date">2026-03-26</td>
-          <td class="col-grid">—</td>
-          <td class="col-theme">黃金、寶藏、冒險</td>
-          <td class="col-feature">Bonus Wheel, Multiplier, Random Multiplier, Fixed Jackpots</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">97.00%</td>
-          <td class="col-num maxwin-val">500x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name" style="color:#55556a">Mines football</td>
-          <td class="col-date" style="color:#33334a">—</td>
-          <td class="col-grid">—</td>
-          <td class="col-theme">足球、Mines 踩地雷</td>
-          <td class="col-feature">Mines</td>
-          <td><span class="vol-tag" style="background:#1a1a22;color:#55556a">—</span></td>
-          <td class="col-num" style="color:#33334a">—</td>
-          <td class="col-num" style="color:#33334a">—</td>
-          <td class="col-badge"><span class="badge badge-empty">—</span></td>
-          <td class="col-badge"><span class="badge badge-empty">—</span></td>
-          <td class="note-cell">slotcatalog 查無，資料待補</td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/3-coin-golden-peacock" target="_blank" rel="noopener">3 Coin Golden Peacock</a></td>
-          <td class="col-date">2026-03-17</td>
-          <td class="col-grid">5x4</td>
-          <td class="col-theme">孔雀、中國、金色、亞洲</td>
-          <td class="col-feature">Cash Collect, Pot Collection, Free Spins, Nudge, Multiplier</td>
-          <td><span class="vol-tag vol-중">中</span></td>
-          <td class="col-num rtp-val">97.05%</td>
-          <td class="col-num maxwin-val">5000x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="note-cell"></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Fa Chai Gaming -->
-<div class="section v-fc">
-  <div class="vendor-header">
-    <span class="vendor-dot"></span>
-    <span class="vendor-name">Fa Chai Gaming</span>
-    <span class="vendor-count">7 款</span>
-  </div>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>遊戲名稱</th><th>上架日</th><th>盤面</th><th>主題</th><th>機制</th><th>波動</th><th>RTP</th><th>最大倍數</th><th>EB</th><th>BF</th><th>備註</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/open-vault" target="_blank" rel="noopener">OPEN VAULT</a></td>
-          <td class="col-date">2026-01-14</td>
-          <td class="col-grid">6xMegaways</td>
-          <td class="col-theme">保險箱、財富、冒險</td>
-          <td class="col-feature">Megaways, Cascading, Multiplier, Free Spins, Bonus Buy</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">10000x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/bad-rich-wolf" target="_blank" rel="noopener">BAD RICH WOLF</a></td>
-          <td class="col-date">2025-12-19</td>
-          <td class="col-grid">3x3</td>
-          <td class="col-theme">惡狼、童話、富豪</td>
-          <td class="col-feature">Wild, Stacked Symbols, Progressive Jackpot, Multiplier, Free Spins, Buy Feature</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">22500x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/dj-boom-boom" target="_blank" rel="noopener">DJ BOOM BOOM</a></td>
-          <td class="col-date">2026-01-02</td>
-          <td class="col-grid">3-4-5-5-4-3</td>
-          <td class="col-theme">DJ、音樂、派對</td>
-          <td class="col-feature">Ways, Free Spins, Multiplier, Scatter, Buy Feature</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">5000x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell">不規則盤面 3600 Ways</td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/muscle-fortune-cat" target="_blank" rel="noopener">MUSCLE FORTUNE CAT</a></td>
-          <td class="col-date">2026-01-06</td>
-          <td class="col-grid">6x4</td>
-          <td class="col-theme">招財貓、肌肉、亞洲</td>
-          <td class="col-feature">Free Spins, Lucky Pouch, Multiplier, Scatter, 4096 Ways</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">10000x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/sugar-bang-bang-plus" target="_blank" rel="noopener">SUGAR BANG BANG PLUS</a></td>
-          <td class="col-date">2025-11-20</td>
-          <td class="col-grid">5x4</td>
-          <td class="col-theme">糖果、甜食、派對</td>
-          <td class="col-feature">1024 Ways, Free Spins, Multiplier, Buy Feature, Ante Bet</td>
-          <td><span class="vol-tag vol-중">中</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">5000x</td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name"><a class="game-link" href="https://slotcatalog.com/en/slots/poker-win-2" target="_blank" rel="noopener">POKER WIN 2</a></td>
-          <td class="col-date">2025-12-02</td>
-          <td class="col-grid">6x4</td>
-          <td class="col-theme">撲克牌、牌局</td>
-          <td class="col-feature">4096 Ways, Free Spins, Multiplier, Buy Feature</td>
-          <td><span class="vol-tag vol-고">高</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">15000x</td>
-          <td class="col-badge"><span class="badge badge-n">N</span></td>
-          <td class="col-badge"><span class="badge badge-y">Y</span></td>
-          <td class="note-cell"></td>
-        </tr>
-        <tr>
-          <td class="col-name" style="color:#55556a">CATLA'S MONEY MACHINE</td>
-          <td class="col-date" style="color:#33334a">—</td>
-          <td class="col-grid">3x1</td>
-          <td class="col-theme">機器、財富</td>
-          <td class="col-feature">Money Machine, Scatter</td>
-          <td><span class="vol-tag vol-중">中</span></td>
-          <td class="col-num rtp-val">96.50%</td>
-          <td class="col-num maxwin-val">20000x</td>
-          <td class="col-badge"><span class="badge badge-empty">—</span></td>
-          <td class="col-badge"><span class="badge badge-empty">—</span></td>
-          <td class="note-cell">slotcatalog 查無，資料來源官網</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- Errors -->
-<div class="errors-section">
-  <div class="errors-title">本期資料缺漏說明</div>
-  <ul class="errors-list">
-    <li>JILI Games — 官網 WordPress 嚴重錯誤，無法存取；改以 slotcatalog 收錄為準</li>
-    <li>JDB Gaming — 官網地區封鎖（IP 限制）；改以 slotcatalog 收錄為準</li>
-    <li>Steamin' Reels (Pragmatic Play) — slotcatalog 查無，RTP / MaxWin 資料待補</li>
-    <li>Mines football (Tada Gaming) — slotcatalog 查無，資料待補</li>
-    <li>CATLA'S MONEY MACHINE (Fa Chai Gaming) — slotcatalog 查無，資料來源為 Fa Chai 官網</li>
-  </ul>
-</div>
-
-<!-- Footer -->
 <div class="footer">
-  <span>資料來源：slotcatalog.com、各廠商官網</span>
-  <span>產出日期：2026-04-15 ｜ 遊戲名稱可點擊前往 SlotCatalog 頁面</span>
+  <span>資料來源：slotcatalog.com ｜ 遊戲名稱可點擊前往 SlotCatalog 頁面</span>
+  <span>最後更新：2026-04-15 ｜ 共 22 款</span>
 </div>
 
+<script>
+const rows = Array.from(document.querySelectorAll('#tbody tr'));
+let activeVendor = 'all';
+let searchTerm = '';
+
+function applyFilters() {
+  let visible = 0;
+  rows.forEach(r => {
+    const vendor = r.dataset.vendor || '';
+    const text = r.textContent.toLowerCase();
+    const vendorOk = activeVendor === 'all' || vendor === activeVendor;
+    const searchOk = !searchTerm || text.includes(searchTerm);
+    const show = vendorOk && searchOk;
+    r.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  document.getElementById('result-count').textContent = visible + ' 筆';
+  document.getElementById('empty-msg').style.display = visible === 0 ? 'block' : 'none';
+}
+
+document.getElementById('search').addEventListener('input', e => {
+  searchTerm = e.target.value.toLowerCase().trim();
+  applyFilters();
+});
+
+document.getElementById('filter-btns').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeVendor = btn.dataset.v;
+  applyFilters();
+});
+</script>
 </body>
 </html>
